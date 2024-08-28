@@ -32,15 +32,14 @@ To Install:
     /opt/Autodesk/user/<user name>/python
 """
 
-from __future__ import print_function
-
 import os
 
 import flame
 from PySide2 import QtWidgets
 
+
 TITLE = 'Copy Name to Clipboard'
-VERSION_INFO = (1, 0, 0)
+VERSION_INFO = (1, 0, 0, 'dev')
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = '{} v{}'.format(TITLE, VERSION)
 MESSAGE_PREFIX = '[PYTHON]'
@@ -141,8 +140,7 @@ def get_mediahub_files_custom_ui_actions():
              'actions': [{'name': 'Name to Clipboard',
                           'isVisible': scope_mediahub_object,
                           'execute': copy_names_mediahub,
-                          'minimumVersion': '2021.1',
-                          'maximumVersion': '2024.9.9.9'}]
+                          'minimumVersion': '2022'}]
             }]
 
 
@@ -152,8 +150,7 @@ def get_media_panel_custom_ui_actions():
              'actions': [{'name': 'Name to Clipboard',
                           'isVisible': scope_media_panel_object,
                           'execute': copy_names_media_panel,
-                          'minimumVersion': '2021.1',
-                          'maximumVersion': '2024.9.9.9'}]
+                          'minimumVersion': '2022'}]
             }]
 
 
@@ -163,6 +160,5 @@ def get_timeline_custom_ui_actions():
              'actions': [{'name': 'Name to Clipboard',
                           'isVisible': scope_timeline_object,
                           'execute': copy_names_timeline,
-                          'minimumVersion': '2021.1',
-                          'maximumVersion': '2024.9.9.9'}]
+                          'minimumVersion': '2022'}]
            }]
