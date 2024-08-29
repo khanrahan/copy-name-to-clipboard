@@ -2,19 +2,17 @@
 Script Name: Copy Name to Clipboard
 Written By: Kieran Hanrahan
 
-Script Version: 1.0.0
-Flame Version: 2021.1
+Script Version: 2.0.0
+Flame Version: 2022
 
 URL: http://www.github.com/khanrahan/copy-name-to-clipboard
 
 Creation Date: 10.12.23
-Update Date: 04.18.24
+Update Date: 08.28.24
 
 Description:
 
     Copy names of selected items to clipboard.
-
-    Tested on 2021.1 & 2024.1.2
 
 Menus:
 
@@ -37,11 +35,10 @@ import os
 import flame
 from PySide2 import QtWidgets
 
-
 TITLE = 'Copy Name to Clipboard'
-VERSION_INFO = (1, 0, 0, 'dev')
+VERSION_INFO = (2, 0, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
-TITLE_VERSION = '{} v{}'.format(TITLE, VERSION)
+TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
 
 
@@ -59,7 +56,7 @@ def copy_to_clipboard(text):
 def startup():
     """Messages to print at start of script run."""
     message(TITLE_VERSION)
-    message('Script called from {}'.format(__file__))
+    message(f'Script called from {__file__}')
 
 
 def copy_names_mediahub(selection):

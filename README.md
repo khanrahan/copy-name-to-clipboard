@@ -4,9 +4,13 @@ Plugin for [Autodesk Flame software](http://www.autodesk.com/products/flame).
 
 Copy name of selected items to the clipboard.
 
-## Installation
-**Compatible with Flame 2024 and below.**
+## Compatibility
+|Release Version|Flame Version|
+|---|---|
+|v2.X.X|Flame 2022 up to 2024.2|
+|v1.X.X|Flame 2021 up to 2021.2|
 
+## Installation
 To make available to all users on the workstation, copy `copy_name_to_clipboard.py` to `/opt/Autodesk/shared/python`
 
 For specific users, copy to `/opt/Autodesk/user/<user name>/python`
