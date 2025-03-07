@@ -8,7 +8,7 @@ Flame Version: 2025
 URL: http://www.github.com/khanrahan/copy-name-to-clipboard
 
 Creation Date: 10.12.23
-Update Date: 08.28.24
+Update Date: 03.06.25
 
 Description:
 
