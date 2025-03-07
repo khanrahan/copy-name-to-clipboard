@@ -2,7 +2,7 @@
 Script Name: Copy Name to Clipboard
 Written By: Kieran Hanrahan
 
-Script Version: 2.0.0
+Script Version: 3.0.0
 Flame Version: 2025
 
 URL: http://www.github.com/khanrahan/copy-name-to-clipboard
@@ -36,7 +36,7 @@ import flame
 from PySide6 import QtWidgets
 
 TITLE = 'Copy Name to Clipboard'
-VERSION_INFO = (2, 0, 0)
+VERSION_INFO = (3, 0, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
