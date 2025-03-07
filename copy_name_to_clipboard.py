@@ -2,13 +2,13 @@
 Script Name: Copy Name to Clipboard
 Written By: Kieran Hanrahan
 
-Script Version: 2.0.0
-Flame Version: 2022
+Script Version: 3.0.0
+Flame Version: 2025
 
 URL: http://www.github.com/khanrahan/copy-name-to-clipboard
 
 Creation Date: 10.12.23
-Update Date: 08.28.24
+Update Date: 03.06.25
 
 Description:
 
@@ -24,19 +24,22 @@ Menus:
 To Install:
 
     For all users, copy this file to:
-    /opt/Autodesk/shared/python
+    /opt/Autodesk/shared/python/
 
-    For a specific user, copy this file to:
-    /opt/Autodesk/user/<user name>/python
+    For a specific user on Linux, copy this file to:
+    /home/<user_name>/flame/python/
+
+    For a specific user on Mac, copy this file to:
+    /Users/<user_name>/Library/Preferences/Autodesk/flame/python/
 """
 
 import os
 
 import flame
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 TITLE = 'Copy Name to Clipboard'
-VERSION_INFO = (2, 0, 0)
+VERSION_INFO = (3, 0, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
@@ -137,7 +140,7 @@ def get_mediahub_files_custom_ui_actions():
              'actions': [{'name': 'Name to Clipboard',
                           'isVisible': scope_mediahub_object,
                           'execute': copy_names_mediahub,
-                          'minimumVersion': '2022'}]
+                          'minimumVersion': '2025'}]
             }]
 
 
@@ -147,7 +150,7 @@ def get_media_panel_custom_ui_actions():
              'actions': [{'name': 'Name to Clipboard',
                           'isVisible': scope_media_panel_object,
                           'execute': copy_names_media_panel,
-                          'minimumVersion': '2022'}]
+                          'minimumVersion': '2025'}]
             }]
 
 
@@ -157,5 +160,5 @@ def get_timeline_custom_ui_actions():
              'actions': [{'name': 'Name to Clipboard',
                           'isVisible': scope_timeline_object,
                           'execute': copy_names_timeline,
-                          'minimumVersion': '2022'}]
+                          'minimumVersion': '2025'}]
            }]
