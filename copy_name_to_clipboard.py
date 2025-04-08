@@ -101,7 +101,7 @@ def copy_names_mediahub(selection):
     results = []
 
     for item in selection:
-        results.append(os.path.splitext(os.path.basename(item.path))[0])
+        results.append(os.path.basename(os.path.normpath(item.path)))
 
     copy_to_clipboard('\n'.join(results))
     message(f'Sent {len(results)} name{plural_s(results)} to the clipboard.')
