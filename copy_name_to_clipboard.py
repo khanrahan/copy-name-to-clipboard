@@ -43,6 +43,27 @@ VERSION_INFO = (3, 0, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
+MEDIAHUB_OBJECTS = (
+        flame.PyMediaHubFilesEntry,
+        flame.PyMediaHubFilesFolder,
+)
+
+MEDIA_PANEL_OBJECTS = (
+        flame.PyClip,
+        flame.PySequence,
+        flame.PyDesktop,
+        flame.PyFolder,
+        flame.PyLibrary,
+        flame.PyReel,
+        flame.PyReelGroup,
+        flame.PyWorkspace,
+)
+
+TIMELINE_OBJECTS = (
+        flame.PyClip,
+        flame.PySegment,
+        flame.PyTransition,
+)
 
 
 def message(string):
@@ -102,48 +123,36 @@ def copy_names_timeline(selection):
     message('Done!')
 
 
-def scope_mediahub_object(selection):
+def scope_selection(selection, objects):
+    """Test if the selection only contains the specified objects."""
+    return all(isinstance(item, objects) for item in selection)
+
+
+def scope_mediahub_objects(selection):
     """Filter out only supported MediaHub exobjects."""
     return scope_selection(selection, MEDIAHUB_OBJECTS)
 
 
-def scope_media_panel_object(selection):
+def scope_media_panel_objects(selection):
     """Filter out only supported Media Panel objects."""
-    valid_objects = (
-            flame.PyClip,
-            flame.PySequence,
-            flame.PyDesktop,
-            flame.PyFolder,
-            flame.PyLibrary,
-            flame.PyReel,
-            flame.PyReelGroup,
-            flame.PyWorkspace,
-    )
-
-    return all(isinstance(item, valid_objects) for item in selection)
+    return scope_selection(selection, MEDIA_PANEL_OBJECTS)
 
 
-def scope_timeline_object(selection):
+def scope_timeline_objects(selection):
     """Filter out only supported Timeline objects.
 
     PyTransitions are included to allow artists to range select segments using shift +
     click.  Shift + click selections will include PyTransitions.  This is more
     convenient than ctrl + click multiple selections to exclude PyTransitions.
     """
-    valid_objects = (
-            flame.PyClip,
-            flame.PySegment,
-            flame.PyTransition,
-    )
-
-    return all(isinstance(item, valid_objects) for item in selection)
+    return scope_selection(selection, TIMELINE_OBJECTS)
 
 
 def get_mediahub_files_custom_ui_actions():
     """Python hook to add custom right click menu item to MediaHub."""
     return [{'name': 'Copy...',
              'actions': [{'name': 'Name to Clipboard',
-                          'isVisible': scope_mediahub_object,
+                          'isVisible': scope_mediahub_objects,
                           'execute': copy_names_mediahub,
                           'minimumVersion': '2025'}]
             }]
@@ -153,7 +162,7 @@ def get_media_panel_custom_ui_actions():
     """Python hook to add custom right click menu item to Media Panel or Desktop."""
     return [{'name': 'Copy...',
              'actions': [{'name': 'Name to Clipboard',
-                          'isVisible': scope_media_panel_object,
+                          'isVisible': scope_media_panel_objects,
                           'execute': copy_names_media_panel,
                           'minimumVersion': '2025'}]
             }]
@@ -163,7 +172,7 @@ def get_timeline_custom_ui_actions():
     """Python hook to add custom right click menu item to Timeline."""
     return [{'name': 'Copy...',
              'actions': [{'name': 'Name to Clipboard',
-                          'isVisible': scope_timeline_object,
+                          'isVisible': scope_timeline_objects,
                           'execute': copy_names_timeline,
                           'minimumVersion': '2025'}]
            }]
