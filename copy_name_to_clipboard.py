@@ -1,6 +1,6 @@
 """
 Script Name: Copy Name to Clipboard
-Written By: Kieran Hanrahan
+Written by: Kieran Hanrahan
 
 Script Version: 3.0.0
 Flame Version: 2025
