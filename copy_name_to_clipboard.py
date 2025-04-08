@@ -83,6 +83,17 @@ def startup():
     message(f'Script called from {__file__}')
 
 
+def plural_s(item):
+    """Examine an item's length and return an 's' if necessary.
+
+    Used to add a trailing s to a name in an fstring if it should be plural.  Zero or
+    multiple will return a trailing s.
+
+    https://stackoverflow.com/questions/21872366/plural-string-formatting
+    """
+    return f'{"s"[:len(item) ^ 1]}'
+
+
 def copy_names_mediahub(selection):
     """The main function for MediaHub selections."""
     startup()
@@ -93,6 +104,7 @@ def copy_names_mediahub(selection):
         results.append(os.path.splitext(os.path.basename(item.path))[0])
 
     copy_to_clipboard('\n'.join(results))
+    message(f'Sent {len(results)} name{plural_s(results)} to the clipboard.')
     message('Done!')
 
 
@@ -106,6 +118,7 @@ def copy_names_media_panel(selection):
         results.append(item.name.get_value())
 
     copy_to_clipboard('\n'.join(results))
+    message(f'Sent {len(results)} name{plural_s(results)} to the clipboard.')
     message('Done!')
 
 
@@ -120,6 +133,7 @@ def copy_names_timeline(selection):
             results.append(item.name.get_value())
 
     copy_to_clipboard('\n'.join(results))
+    message(f'Sent {len(results)} name{plural_s(results)} to the clipboard.')
     message('Done!')
 
 
