@@ -95,7 +95,8 @@ def copy_names_timeline(selection):
     results = []
 
     for item in selection:
-        results.append(item.name.get_value())
+        if not isinstance(item, flame.PyTransition):
+            results.append(item.name.get_value())
 
     copy_to_clipboard('\n'.join(results))
     message('Done!')
@@ -103,11 +104,7 @@ def copy_names_timeline(selection):
 
 def scope_mediahub_object(selection):
     """Filter out only supported MediaHub exobjects."""
-    valid_objects = (
-            flame.PyMediaHubFilesEntry,
-            flame.PyMediaHubFilesFolder)
-
-    return all(isinstance(item, valid_objects) for item in selection)
+    return scope_selection(selection, MEDIAHUB_OBJECTS)
 
 
 def scope_media_panel_object(selection):
@@ -120,16 +117,24 @@ def scope_media_panel_object(selection):
             flame.PyLibrary,
             flame.PyReel,
             flame.PyReelGroup,
-            flame.PyWorkspace)
+            flame.PyWorkspace,
+    )
 
     return all(isinstance(item, valid_objects) for item in selection)
 
 
 def scope_timeline_object(selection):
-    """Filter out only supported Timeline objects."""
+    """Filter out only supported Timeline objects.
+
+    PyTransitions are included to allow artists to range select segments using shift +
+    click.  Shift + click selections will include PyTransitions.  This is more
+    convenient than ctrl + click multiple selections to exclude PyTransitions.
+    """
     valid_objects = (
             flame.PyClip,
-            flame.PySegment)
+            flame.PySegment,
+            flame.PyTransition,
+    )
 
     return all(isinstance(item, valid_objects) for item in selection)
 
