@@ -1,14 +1,14 @@
 """
 Script Name: Copy Name to Clipboard
-Written By: Kieran Hanrahan
+Written by: Kieran Hanrahan
 
-Script Version: 3.0.0
+Script Version: 3.1.0
 Flame Version: 2025
 
 URL: http://www.github.com/khanrahan/copy-name-to-clipboard
 
 Creation Date: 10.12.23
-Update Date: 03.06.25
+Update Date: 04.08.25
 
 Description:
 
@@ -39,10 +39,31 @@ import flame
 from PySide6 import QtWidgets
 
 TITLE = 'Copy Name to Clipboard'
-VERSION_INFO = (3, 0, 0)
+VERSION_INFO = (3, 1, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
+MEDIAHUB_OBJECTS = (
+        flame.PyMediaHubFilesEntry,
+        flame.PyMediaHubFilesFolder,
+)
+
+MEDIA_PANEL_OBJECTS = (
+        flame.PyClip,
+        flame.PySequence,
+        flame.PyDesktop,
+        flame.PyFolder,
+        flame.PyLibrary,
+        flame.PyReel,
+        flame.PyReelGroup,
+        flame.PyWorkspace,
+)
+
+TIMELINE_OBJECTS = (
+        flame.PyClip,
+        flame.PySegment,
+        flame.PyTransition,
+)
 
 
 def message(string):
@@ -62,6 +83,17 @@ def startup():
     message(f'Script called from {__file__}')
 
 
+def plural_s(item):
+    """Examine an item's length and return an 's' if necessary.
+
+    Used to add a trailing s to a name in an fstring if it should be plural.  Zero or
+    multiple will return a trailing s.
+
+    https://stackoverflow.com/questions/21872366/plural-string-formatting
+    """
+    return f'{"s"[:len(item) ^ 1]}'
+
+
 def copy_names_mediahub(selection):
     """The main function for MediaHub selections."""
     startup()
@@ -69,9 +101,10 @@ def copy_names_mediahub(selection):
     results = []
 
     for item in selection:
-        results.append(os.path.splitext(os.path.basename(item.path))[0])
+        results.append(os.path.basename(os.path.normpath(item.path)))
 
     copy_to_clipboard('\n'.join(results))
+    message(f'Sent {len(results)} name{plural_s(results)} to the clipboard.')
     message('Done!')
 
 
@@ -85,6 +118,7 @@ def copy_names_media_panel(selection):
         results.append(item.name.get_value())
 
     copy_to_clipboard('\n'.join(results))
+    message(f'Sent {len(results)} name{plural_s(results)} to the clipboard.')
     message('Done!')
 
 
@@ -95,50 +129,44 @@ def copy_names_timeline(selection):
     results = []
 
     for item in selection:
-        results.append(item.name.get_value())
+        if not isinstance(item, flame.PyTransition):
+            results.append(item.name.get_value())
 
     copy_to_clipboard('\n'.join(results))
+    message(f'Sent {len(results)} name{plural_s(results)} to the clipboard.')
     message('Done!')
 
 
-def scope_mediahub_object(selection):
+def scope_selection(selection, objects):
+    """Test if the selection only contains the specified objects."""
+    return all(isinstance(item, objects) for item in selection)
+
+
+def scope_mediahub_objects(selection):
     """Filter out only supported MediaHub exobjects."""
-    valid_objects = (
-            flame.PyMediaHubFilesEntry,
-            flame.PyMediaHubFilesFolder)
-
-    return all(isinstance(item, valid_objects) for item in selection)
+    return scope_selection(selection, MEDIAHUB_OBJECTS)
 
 
-def scope_media_panel_object(selection):
+def scope_media_panel_objects(selection):
     """Filter out only supported Media Panel objects."""
-    valid_objects = (
-            flame.PyClip,
-            flame.PySequence,
-            flame.PyDesktop,
-            flame.PyFolder,
-            flame.PyLibrary,
-            flame.PyReel,
-            flame.PyReelGroup,
-            flame.PyWorkspace)
-
-    return all(isinstance(item, valid_objects) for item in selection)
+    return scope_selection(selection, MEDIA_PANEL_OBJECTS)
 
 
-def scope_timeline_object(selection):
-    """Filter out only supported Timeline objects."""
-    valid_objects = (
-            flame.PyClip,
-            flame.PySegment)
+def scope_timeline_objects(selection):
+    """Filter out only supported Timeline objects.
 
-    return all(isinstance(item, valid_objects) for item in selection)
+    PyTransitions are included to allow artists to range select segments using shift +
+    click.  Shift + click selections will include PyTransitions.  This is more
+    convenient than ctrl + click multiple selections to exclude PyTransitions.
+    """
+    return scope_selection(selection, TIMELINE_OBJECTS)
 
 
 def get_mediahub_files_custom_ui_actions():
     """Python hook to add custom right click menu item to MediaHub."""
     return [{'name': 'Copy...',
              'actions': [{'name': 'Name to Clipboard',
-                          'isVisible': scope_mediahub_object,
+                          'isVisible': scope_mediahub_objects,
                           'execute': copy_names_mediahub,
                           'minimumVersion': '2025'}]
             }]
@@ -148,7 +176,7 @@ def get_media_panel_custom_ui_actions():
     """Python hook to add custom right click menu item to Media Panel or Desktop."""
     return [{'name': 'Copy...',
              'actions': [{'name': 'Name to Clipboard',
-                          'isVisible': scope_media_panel_object,
+                          'isVisible': scope_media_panel_objects,
                           'execute': copy_names_media_panel,
                           'minimumVersion': '2025'}]
             }]
@@ -158,7 +186,7 @@ def get_timeline_custom_ui_actions():
     """Python hook to add custom right click menu item to Timeline."""
     return [{'name': 'Copy...',
              'actions': [{'name': 'Name to Clipboard',
-                          'isVisible': scope_timeline_object,
+                          'isVisible': scope_timeline_objects,
                           'execute': copy_names_timeline,
                           'minimumVersion': '2025'}]
            }]
